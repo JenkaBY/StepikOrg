@@ -1,6 +1,7 @@
 package org.stepik.java.endava;
 
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class Main14 {
     /*
@@ -9,9 +10,13 @@ public class Main14 {
         Output: true if they overlap, false otherwise
     * */
     public static void main(String[] args) {
-        String[] input = new Scanner(System.in).nextLine().split(" ");
+        String[] input = new Scanner(System.in).nextLine().split("\\s+");
 
-        System.out.println();
+        System.out.println(new Range(parse(input[0]), parse(input[1])).isIntersected(new Range(parse(input[2]), parse(input[3]))));
+    }
+
+    private static int parse(String readLine) {
+        return Integer.valueOf(readLine);
     }
 
     public static class Range {
@@ -23,8 +28,18 @@ public class Main14 {
             this.right = right;
         }
 
-        public boolean intersection(Range another) {
-            return false;
+        public IntStream points() {
+            return IntStream.rangeClosed(left, right);
+        }
+
+        public boolean isIntersected(Range another) {
+            return points()
+                    .anyMatch((point) -> another.points()
+                            .boxed()
+                            .anyMatch(
+                                    (anotherPoint) -> anotherPoint.equals(point)
+                            )
+                    );
         }
     }
 }
