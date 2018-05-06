@@ -1,8 +1,10 @@
 package org.stepik.java.endava.two;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Main25 {
@@ -15,11 +17,26 @@ public class Main25 {
         Output: Scalar product
     * */
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Integer dim = sc.nextInt();
-        Vector firstVector = new Vector(sc.nextLine().split(" "));
-        Vector secondVector = new Vector(sc.nextLine().split(" "));
+        String[] input = readStdIn(3);
+        Integer dim = Integer.valueOf(input[0]);
+        String[] first = input[1].split("\\s+");
+        String[] second = input[2].split("\\s+");
+        Vector firstVector = new Vector(first);
+        Vector secondVector = new Vector(second);
         System.out.println(firstVector.product(secondVector));
+    }
+
+    public static String[] readStdIn(int readTimes) {
+        String[] inputs = null;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            inputs = new String[readTimes];
+            for (int i = 0; i < readTimes; i++) {
+                inputs[i] = br.readLine().trim();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return inputs;
     }
 
     public static class Vector {
