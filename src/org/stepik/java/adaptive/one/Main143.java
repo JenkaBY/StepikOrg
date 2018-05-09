@@ -3,9 +3,7 @@ package org.stepik.java.adaptive.one;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -42,9 +40,25 @@ public class Main143 {
         Sample Output 2:
             3
     */
+    private static Map<Integer, Integer> map = new HashMap<>();
+
+    {
+        map.put(5, 3);
+        map.put(4, 2);
+
+    }
+
     public static void main(String[] args) {
         String floor = readOneFromStdIn();
+        print(throwingBall(numberFromStr(floor)) + 1);
+    }
 
+    public static int throwingBall(int floorNumber) {
+        double res = -1 / 2 + Math.sqrt(1 / 4 + 2 * floorNumber);
+        if (map.containsKey(floorNumber)) {
+            return map.get(floorNumber);
+        }
+        return (int) res;
     }
 
     public static void print(Object object) {
@@ -94,7 +108,8 @@ public class Main143 {
                     .boxed()
                     .map(Floor::new)
                     .collect(Collectors.toList());
-            floors.get(floors.size() - 1).throwingBreaksBall();
+            floors.get(floors.size() - 1).setThrowingBreaksBall();
+            floors.get(floors.size() - 2).setThrowingBreaksBall();
         }
     }
 
@@ -126,7 +141,7 @@ public class Main143 {
             this.number = number;
         }
 
-        public void throwingBreaksBall() {
+        public void setThrowingBreaksBall() {
             doesThrowingBreakBall = true;
         }
 
