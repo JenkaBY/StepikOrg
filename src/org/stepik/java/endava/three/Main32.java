@@ -1,12 +1,49 @@
 package org.stepik.java.endava.three;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main32 {
     public static void main(String[] args) {
+        Runner runner = new Runner();
+        runner.run();
+    }
+
+    public static class Runner {
+        List<Course> courses;
+
+        public Runner() {
+            courses = new ArrayList<>();
+        }
+
+        public void run() {
+            InputParser parser = new InputParser(readStdIn());
+            parser.parse().getCommands().forEach(commandWithParams -> {
+                switch (commandWithParams.command) {
+                    case CREATE_COURSE_WITH_STUDENTS: {
+                        String name = commandWithParams.params.poll();
+                        Integer numberOfStudents = numberFromStr(commandWithParams.params.poll());
+                        Integer numberOfSemester = numberFromStr(commandWithParams.params.poll());
+                        courses.add(new Course(name, numberOfStudents, numberOfSemester));
+                        break;
+                    }
+                    case CREATE_BASIC_COURSE: {
+                        String name = commandWithParams.params.poll();
+                        Integer numberOfSemester = numberFromStr(commandWithParams.params.poll());
+                        courses.add(new Course(name, numberOfSemester));
+                        break;
+                    }
+                    case PRINT:
+                        courses.forEach(System.out::println);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
 
     }
 
@@ -55,6 +92,15 @@ public class Main32 {
         private Command command;
         private LinkedList<String> params;
 
+        public CommandWithParams(Command command) {
+            this.command = command;
+            params = new LinkedList<>();
+        }
+
+        public CommandWithParams withParameters(String[] params) {
+            this.params.addAll(Arrays.asList(params));
+            return this;
+        }
     }
 
     enum Command {
@@ -87,11 +133,15 @@ public class Main32 {
         }
 
         public InputParser parse() {
-            String line = lines.poll();
-            String parsedCommand = splitAndGetFirst(line);
-            Command command = Command.build(parsedCommand);
-
-
+            String line;
+            while ((line = lines.poll()) != null) {
+                String parsedCommand = splitAndGetFirst(line);
+                Command command = Command.build(parsedCommand);
+                CommandWithParams commandWithParams =
+                        new CommandWithParams(command)
+                                .withParameters(getParsedParams(line, parsedCommand).split("\\s+"));
+                commands.add(commandWithParams);
+            }
             return this;
         }
 
@@ -104,7 +154,24 @@ public class Main32 {
         }
 
         private static String getParsedParams(String wholeLine, String parsedCommand) {
-            return wholeLine.replace(parsedCommand, "").trim();
+            return wholeLine.replaceFirst(parsedCommand, "").trim();
         }
+    }
+
+    public static int numberFromStr(String readLine) {
+        return Integer.valueOf(readLine);
+    }
+
+    public static LinkedList<String> readStdIn() {
+        LinkedList<String> inputs = new LinkedList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            inputs = br.lines()
+                    .filter(s -> s != null)
+                    .filter(s -> !s.trim().isEmpty())
+                    .collect(Collectors.toCollection(LinkedList::new));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return inputs;
     }
 }
