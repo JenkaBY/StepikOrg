@@ -7,6 +7,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main32 {
+    /*
+    You need to create a solution that stores data for university courses.
+    Each course has the following data:
+        Name (String)﻿,
+        Number of students (Integer)
+        Number of semester (Integer)
+    From the input a list of K commands are read.
+
+    Here is the list of commands:
+        1  course_name  number_of_students﻿ number_of_semester      Adds the course in the list of the courses
+        2  course_name  number_of_semester             Adds the course to the list of courses with 0 students
+        3                                 Prints the list of courses.
+    The print format for command 3 is the following:
+    "Course_name, Winter/Summer Semester, Number_of_students"
+    The Winter/Summer Semester is based on the number of semester. Odd semesters are Winter, while the even semesters are Summer.
+ *  */
     public static void main(String[] args) {
         Runner runner = new Runner();
         runner.run();
