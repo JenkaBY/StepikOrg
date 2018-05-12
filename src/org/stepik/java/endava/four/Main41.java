@@ -3,6 +3,7 @@ package org.stepik.java.endava.four;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -84,17 +85,13 @@ public class Main41 {
         }
 
         private void printTotalWeight() {
-            filteredStore(item -> item instanceof StorageItem)
+            final double sum = filteredStore(item -> item instanceof StorageItem)
                     .map(item -> (StorageItem) item)
                     .map(item -> item.getWeight() * item.getQuantity())
-                    .map(Double::valueOf)
-                    .collect(
-                            Collectors.collectingAndThen(Collectors.summingDouble(s -> s),
-                                    (s) -> {
-                                        System.out.println(s);
-                                        return null;
-                                    })
-                    );
+                    .mapToDouble(Double::valueOf)
+                    .sum();
+            DecimalFormat df = new DecimalFormat("###.#");
+            System.out.println(df.format(sum));
         }
 
         private void printCheapestMarketItem() {
