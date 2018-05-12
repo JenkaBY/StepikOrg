@@ -1,23 +1,21 @@
-package org.stepik.java.endava.two;
+package org.stepik.java.adaptive.one;
 
 import java.util.*;
 
-public class Main23 {
+public class Main156 {
     /*
-        Read a string from the standard input.
-        Find the character that is repeated the most consecutively in the string.
-        Output: Print the character and the maximal number of consecutive occurences.
-        In case there are two, print the first character that occurred.
+        Upon learning that DNA is not a random string, freshmen of the Bioinformatics Institute from the informatics group
+         suggested using a compression algorithm that compresses repeated characters in a string.
+        Encoding is performed as follows:
+         s = 'aaaabbсaa' is converted into 'a4b2с1a2', that is, the groups of the same characters of the input string
+                                are replaced by the symbol and the number of its repetitions in this string.
+        Write a program, which reads the string, encodes it by this algorithm and outputs the encoded sequence.
+            Encoding must be case sensitive.
     * */
     public static void main(String[] args) {
         String input = new Scanner(System.in).nextLine();
         String repeatingSequence = repeatingSequence(input);
-        int max = maxNumber(repeatingSequence);
-        System.out.println(getCharOfMaxSequence(repeatingSequence, max) + " " + max);
-    }
-
-    public static char getCharOfMaxSequence(String seq, int maxSeqNumber) {
-        return seq.charAt(seq.indexOf(String.valueOf(maxSeqNumber)) - 1);
+        System.out.println(repeatingSequence);
     }
 
     public static String repeatingSequence(String sequence) {
@@ -56,10 +54,6 @@ public class Main23 {
 
         public void increment() {
             repeatings++;
-        }
-
-        public String getChr() {
-            return chr;
         }
 
         public String getRepeatings() {
