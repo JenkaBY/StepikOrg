@@ -22,7 +22,7 @@ public class Main12 {
     * */
     public static void main(String[] args) {
         Packer packer = new Packer();
-//        packer.repackage(new Package<Object>(), new Package<Food>());
+        packer.repackage(new Package<Object>(), new Package<Bakery>());
     }
 
     /**
@@ -30,12 +30,20 @@ public class Main12 {
      * Fix method types in signature and add implementation.
      */
     static class Packer {
-        public void repackage(Box<? super Bakery> to, Box<? extends Bakery> from) {
-            to.put(from.get());
+        public <T extends Bakery, F extends Goods> void repackage(Box<? super F> to, Box<? extends T> from) {
+            if (!(to.get() instanceof Food)) {
+//                to.put(from.get());
+            } else {
+                System.err.println(from.getClass());
+                throw new IllegalArgumentException();
+            }
         }
     }
 
-    static class Food {
+    interface Goods {
+    }
+
+    static class Food implements Goods {
     }
 
     static class Bakery extends Food {
