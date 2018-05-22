@@ -30,13 +30,8 @@ public class Main12 {
      * Fix method types in signature and add implementation.
      */
     static class Packer {
-        public <T extends Bakery, F extends Goods> void repackage(Box<? super F> to, Box<? extends T> from) {
-            if (!(to.get() instanceof Food)) {
-//                to.put(from.get());
-            } else {
-                System.err.println(from.getClass());
-                throw new IllegalArgumentException();
-            }
+        public <T extends Bakery> void repackage(Box<? super T> to, Box<T> from) {
+            to.put(from.get());
         }
     }
 
@@ -68,14 +63,15 @@ public class Main12 {
     }
 
     static class Package<T> implements Box<T> {
-
+        T item;
         @Override
         public void put(T item) {
+            this.item = item;
         }
 
         @Override
         public T get() {
-            return null;
+            return item;
         }
     }
 }
