@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,7 +14,8 @@ public class Main61 {
 
     public static void main(String[] args) {
         LinkedList<String> inputs = readStdIn();
-
+        Thread.currentThread().isInterrupted();
+        ConcurrentHashMap<String, String> f;
         List<Integer> initialNumbers = Stream.of(inputs.poll().split(" "))
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());

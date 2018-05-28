@@ -1,5 +1,8 @@
 package org.stepik.java.contest.three;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main20 {
     /*
         You are asked to perform security audit in a company that bakes Bakery and different sublasses of it and sells it in a nice boxes.
@@ -33,37 +36,43 @@ public class Main20 {
         You shouldn't change method signature or change code of any other classes, just add implementaiton to defraud method.
     * */
     public static void main(String[] args) {
-        Packer packer = new Packer();
-        packer.repackage(new Package<Object>(), new Package<Bakery>());
+
     }
 
     /**
-     * This packer has too much freedom and could repackage stuff in wrong direction.
-     * Fix method types in signature and add implementation.
+     * Class to work with
      */
-    static class Packer {
-        public <T extends Bakery> void repackage(Box<? super T> to, Box<T> from) {
-            to.put(from.get());
+    static class Violator {
+
+        public static List<Box<? extends Bakery>> defraud() {
+            // Add implementation here
+            List<Box<? extends Bakery>> boxes = new ArrayList<>();
+
+            boxes.add(new Box() {
+                Paper paper;
+
+                @Override
+                public void put(Object item) {
+                    paper = (Paper) item;
+                }
+
+                @Override
+                public Object get() {
+                    return new Paper();
+                }
+            });
+            return boxes;
         }
+
     }
 
-    interface Goods {
-    }
 
-    static class Food implements Goods {
-    }
-
-    static class Bakery extends Food {
+    static class Bakery {
     }
 
     static class Cake extends Bakery {
     }
 
-    static class Pie extends Bakery {
-    }
-
-    static class Tart extends Bakery {
-    }
 
     static class Paper {
     }
@@ -74,17 +83,10 @@ public class Main20 {
         T get();
     }
 
-    static class Package<T> implements Box<T> {
-        T item;
-
-        @Override
-        public void put(T item) {
-            this.item = item;
-        }
-
-        @Override
-        public T get() {
-            return item;
+    class NaiveQualityControl {
+        public boolean check(List<Box<? extends Bakery>> boxes) {
+            // Method signature guarantees that all illegal calls will produce compile-time error... or not?
+            return true;
         }
     }
 }
