@@ -16,6 +16,8 @@ public class Main52 {
             Competitions
         You need to create a solution for storing data for competitions.
         There are three types of competitions and the stored data is shown in the following UML diagram:
+            https://ucarecdn.com/877368ed-429f-462d-986c-107a0dac4b51/
+
         You will read commands from the input and they are the following:
             1 location day winning_team_name time_first_half time_second_half   Adds a new soccer competition 
             2 location day winner_name winner_surname set_times[5]         Adds a new tennis competition
@@ -32,11 +34,8 @@ public class Main52 {
      *  */
 
     public static void main(String[] args) {
-        System.out.println(SoccerCompetition.class.getSimpleName());
-        Competition tennis = new SoccerCompetition("dsds", 1);
-        System.out.println(tennis.getClass().getCanonicalName());
-//        Runner runner = new Runner(new CompetitionConsumer());
-//        runner.run();
+        Runner runner = new Runner(new CompetitionConsumer());
+        runner.run();
     }
 
     public static class Runner {
