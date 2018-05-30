@@ -2,6 +2,8 @@ package org.stepik.java.contest.three;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Main25 {
     /*
@@ -29,9 +31,9 @@ public class Main25 {
         You are free to correct method's type signature if needed.
     * */
     public static void main(String[] args) {
-        Type type = ComparatorInspector.getComparatorType(MyComp.class);
+        Type type = ComparatorInspector.getComparatorType(MyInt.class);
 
-        System.out.println(type.getTypeName());
+        System.out.println(Optional.ofNullable(type).map(Type::getTypeName).orElse("null"));
     }
 
     static class MyInt implements Comparable<Integer> {
@@ -49,6 +51,13 @@ public class Main25 {
         }
     }
 
+    static class MyCompObj implements Comparable<Object> {
+
+        @Override
+        public int compareTo(Object o) {
+            return 0;
+        }
+    }
     /**
      * Class to work with
      */
@@ -60,14 +69,18 @@ public class Main25 {
          * @param clazz {@link Class} object, should be non null
          * @return {@link Type} object or null if Comparable does not have type parameter
          */
-        public static <T> Type getComparatorType(Class clazz) {
+        public static <T> Type getComparatorType(Class<? extends Comparable<T>> clazz) {
             // Add implementation
-            Type[] pt = clazz.getGenericInterfaces();
-//            java.lang.Comparable<java.lang.Integer>
-            ParameterizedType pt1 = (ParameterizedType) pt[0];
-            Type[] types = pt1.getActualTypeArguments();
-            return types[0];
-        }
+            Type[] allTypes = clazz.getGenericInterfaces();
+            final Optional<Type> typeOptional = Stream.of(allTypes)
+                    .filter(type -> type.getTypeName().startsWith("java.lang.Comparable<"))
+                    .findFirst();
 
+            return typeOptional
+                    .map(type -> ((ParameterizedType) type))
+                    .map(ParameterizedType::getActualTypeArguments)
+                    .flatMap(types -> Stream.of(types).findFirst())
+                    .orElse(null);
+        }
     }
 }
