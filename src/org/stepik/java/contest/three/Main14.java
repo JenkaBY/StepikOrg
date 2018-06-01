@@ -76,6 +76,10 @@ public class Main14 {
         // Some implementation...
     }
 
+    static class Pie extends Bakery {
+        // Some implementation...
+    }
+
     static class CaloryGrader {
 
         /**
@@ -87,7 +91,9 @@ public class Main14 {
          * @param items collection of items to sort
          * @return sorted copy
          */
-        public <T> List<? extends Calorie> grade(List<? extends Calorie> items) {
+        public <T extends Calorie> List grade(List<T> items) {
+
+//        public <T extends Calorie> List<T> grade(List<? extends T> items) {
             // Add implementation
 //
             return items.stream()
@@ -96,40 +102,26 @@ public class Main14 {
         }
 
         /*
-            Compilation error
-            Main.java:78: error: incompatible types: List<CAP#1> cannot be converted to List<Cake>
-                    List<Cake> caloryCakes = grader.grade(cakes);
-                                                         ^
-              where CAP#1 is a fresh type-variable:
-                CAP#1 extends Calorie from capture of ? extends Calorie
-            Main.java:87: error: incompatible types: List<CAP#1> cannot be converted to List<Pie>
-                    List<Pie> caloryPies = grader.grade(pies);
-                                                       ^
-              where CAP#1 is a fresh type-variable:
-                CAP#1 extends Calorie from capture of ? extends Calorie
-            Main.java:93: error: incompatible types: List<CAP#1> cannot be converted to List<Bakery>
-                    List<Bakery> caloryBakery = grader.grade(bakeries);
-                                                            ^
-              where CAP#1 is a fresh type-variable:
-                CAP#1 extends Calorie from capture of ? extends Calorie
-            Main.java:102: error: incompatible types: List<CAP#1> cannot be converted to List<Bakery>
-                    List<Bakery> caloryBakeryCakes = grader.grade(cakes);
-                                                                 ^
-              where CAP#1 is a fresh type-variable:
-                CAP#1 extends Calorie from capture of ? extends Calorie
-            Main.java:108: error: incompatible types: List<CAP#1> cannot be converted to List<Drink>
-                    List<Drink> caloryDrinks = grader.grade(drinks);
-                                                           ^
-              where CAP#1 is a fresh type-variable:
-                CAP#1 extends Calorie from capture of ? extends Calorie
-            5 errors
+            List<Cake> caloryCakes = grader.grade(cakes);
+            List<Pie> caloryPies = grader.grade(pies);
+            List<Bakery> caloryBakery = grader.grade(bakeries);
+            List<Bakery> caloryBakeryCakes = grader.grade(cakes);
+            List<Drink> caloryDrinks = grader.grade(drinks);
         */
     }
 
     public static void main(String[] args) {
         List<Bakery> cakes = new ArrayList<>();
+        List<Bakery> pies = new ArrayList<>();
+        List<Bakery> bakeries = new ArrayList<>();
+        List<Bakery> drinks = new ArrayList<>();
         cakes.add(new Cake());
-        CaloryGrader cg = new CaloryGrader();
+        CaloryGrader grader = new CaloryGrader();
 //        List<Bakery> caloryBakeryCakes = cg.grade(cakes);
+        List<Cake> caloryCakes = grader.grade(cakes);
+        List<Pie> caloryPies = grader.grade(pies);
+        List<Bakery> caloryBakery = grader.grade(bakeries);
+        List<Bakery> caloryBakeryCakes = grader.grade(cakes);
+        List<Drink> caloryDrinks = grader.grade(drinks);
     }
 }
