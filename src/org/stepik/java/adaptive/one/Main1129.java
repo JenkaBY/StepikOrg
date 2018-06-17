@@ -144,5 +144,19 @@ public class Main1129 {
                 }
             }
         }
+
+//        public void rotateCWto90Degrees() {
+//            int[][] tempMatrix = new int[getHorizontalSize()][getVerticalSize()];
+//
+//            for (int tempVertical = 0; tempVertical < getHorizontalSize(); tempVertical++) {
+//
+//                for (int tempHorizontal = 0; tempHorizontal < getVerticalSize(); tempHorizontal++) {
+//
+//                    tempMatrix[tempVertical][tempHorizontal] = getElement(getVerticalSize() - tempHorizontal - 1,
+//                            tempVertical);
+//                }
+//            }
+//            array = tempMatrix;
+//        }
     }
 }
