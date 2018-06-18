@@ -39,7 +39,13 @@ public class Main123 {
     }
 
     public enum Direction {
-        UP, DOWN, LEFT, RIGHT, DO_NOT_MOVE;
+        UP, DOWN, LEFT, RIGHT,
+        DO_NOT_MOVE() {
+            @Override
+            public String toString() {
+                return this.name().toLowerCase().replaceAll("_", " ");
+            }
+        };
         private static String MOVE = "move";
 
         public static Direction build(Integer direction) {
@@ -61,9 +67,6 @@ public class Main123 {
 
         @Override
         public String toString() {
-            if (this == DO_NOT_MOVE) {
-                return this.name().toLowerCase().replaceAll("_", " ");
-            }
             return MOVE + " " + this.name().toLowerCase();
         }
     }
