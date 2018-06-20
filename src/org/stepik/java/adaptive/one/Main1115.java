@@ -40,7 +40,7 @@ public class Main1115 {
         public List<Integer> transformToSumNeighbors() {
             List<Integer> result = new ArrayList<>();
             for (int i = 0; i < numbers.size(); i++) {
-                Integer sum = numbers.getLeft(i) + numbers.getRight(i);
+                Integer sum = numbers.size() == 1 ? numbers.get(0) : numbers.getLeft(i) + numbers.getRight(i);
                 result.add(sum);
             }
             return result;
