@@ -3,6 +3,9 @@ package org.stepik.java.adaptive.one;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,8 +52,40 @@ public class Main1129 {
         return inputs;
     }
 
-    public static class Matrix {
+    public static class Matrix<T> {
+        List<Cell<T>> cells;
 
+        public Matrix() {
+            this.cells = new ArrayList<>();
+        }
+
+        public Matrix(List<Cell<T>> cells) {
+            this.cells = cells;
+        }
+
+        public void addCell(Cell<T> cell) {
+            cells.add(cell);
+        }
+
+        public List<Cell<T>> getCells() {
+            return cells;
+        }
+
+
+    }
+
+    public static class CellSort {
+        public final static Comparator<Cell> BY_ROW_NUMBER = new ByRowNumber();
+
+        private static class ByRowNumber implements Comparator<Cell> {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                return 0;
+            }
+        }
+
+        class ByColumnNumber {
+        }
     }
 
     public static class Column<T> extends Numbers<T> {
@@ -68,15 +103,15 @@ public class Main1129 {
         }
     }
 
-    public static class Ceil<T> {
+    public static class Cell<T> {
         T value;
         int rowNumber;
         int columnNumber;
 
-        public Ceil() {
+        public Cell() {
         }
 
-        public Ceil(T value) {
+        public Cell(T value) {
             this.value = value;
         }
 
@@ -105,37 +140,37 @@ public class Main1129 {
         }
 
         public static class CeilBuilder<T> {
-            private Ceil<T> ceil;
+            private Cell<T> cell;
 
             private void initCeil() {
-                if (ceil == null) {
-                    ceil = new Ceil<>();
+                if (cell == null) {
+                    cell = new Cell<>();
                 }
             }
 
             public CeilBuilder<T> withValue(T value) {
                 initCeil();
-                ceil.value = value;
+                cell.value = value;
                 return this;
             }
 
             public CeilBuilder<T> withRowNumber(int rowNumber) {
                 initCeil();
                 checkPositiveNumber(rowNumber);
-                ceil.rowNumber = rowNumber;
+                cell.rowNumber = rowNumber;
                 return this;
             }
 
             public CeilBuilder<T> withColumnNumber(int columnNumber) {
                 initCeil();
                 checkPositiveNumber(columnNumber);
-                ceil.columnNumber = columnNumber;
+                cell.columnNumber = columnNumber;
                 return this;
             }
 
-            public Ceil<T> getCeil() {
+            public Cell<T> getCell() {
                 initCeil();
-                return ceil;
+                return cell;
             }
 
             private void checkPositiveNumber(int number) {
