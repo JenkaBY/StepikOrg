@@ -68,40 +68,62 @@ public class Main1129 {
         }
 
         public List<Cell<T>> getCells() {
-            return cells;
+            return cells.stream()
+                    .sorted(CellSort.NATURAL)
+                    .collect(Collectors.toList());
         }
 
-
+        public Cell<T> getCellByRowAndColumn(int row, int column) {
+            return cells.stream()
+                    .filter(cell -> cell.getColumnNumber() == column && cell.getRowNumber() == row)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Not found cells by column = " + column + ", row = " + row));
+        }
     }
 
     public static class CellSort {
-        public final static Comparator<Cell> BY_ROW_NUMBER = new ByRowNumber();
+        public static final Comparator<Cell> NATURAL = byRowAndThenByColumn();
 
-        private static class ByRowNumber implements Comparator<Cell> {
-            @Override
-            public int compare(Cell o1, Cell o2) {
-                return 0;
-            }
-        }
-
-        class ByColumnNumber {
+        private static final Comparator<Cell> byRowAndThenByColumn() {
+            Comparator<Cell> cop = Comparator.comparing(Cell::getRowNumber);
+            return cop.thenComparing(Cell::getColumnNumber);
         }
     }
 
-    public static class Column<T> extends Numbers<T> {
+    public static class MatrixRotator<T> {
+        Matrix<T> matrix;
 
-        public Column(T[] numbers) {
-            super(numbers);
+        public MatrixRotator(Matrix<T> matrix) {
+            this.matrix = matrix;
+        }
+
+        public Matrix<T> rotate() {
+            final Matrix<T> rotatedMatrix = new Matrix<>();
+            matrix.getCells().forEach(cell -> {
+                int row = 0;
+                int column = 0;
+                Cell<T> original = matrix.getCellByRowAndColumn(cell.getRowNumber(), cell.getColumnNumber());
+                Cell<T> rot = new Cell.CeilBuilder().withValue(original.getValue())
+//                        .withColumnNumber()
+                        .getCell();
+            });
+            return rotatedMatrix;
         }
     }
 
-    public static abstract class Numbers<T> {
-        private T[] numbers;
-
-        public Numbers(T[] numbers) {
-            this.numbers = numbers;
-        }
-    }
+    //        public void rotateCWto90Degrees() {
+//            int[][] tempMatrix = new int[getHorizontalSize()][getVerticalSize()];
+//
+//            for (int tempVertical = 0; tempVertical < getHorizontalSize(); tempVertical++) {
+//
+//                for (int tempHorizontal = 0; tempHorizontal < getVerticalSize(); tempHorizontal++) {
+//
+//                    tempMatrix[tempVertical][tempHorizontal] = getElement(getVerticalSize() - tempHorizontal - 1,
+//                            tempVertical);
+//                }
+//            }
+//            array = tempMatrix;
+//        }
 
     public static class Cell<T> {
         T value;
@@ -109,10 +131,6 @@ public class Main1129 {
         int columnNumber;
 
         public Cell() {
-        }
-
-        public Cell(T value) {
-            this.value = value;
         }
 
         public T getValue() {
@@ -179,19 +197,5 @@ public class Main1129 {
                 }
             }
         }
-
-//        public void rotateCWto90Degrees() {
-//            int[][] tempMatrix = new int[getHorizontalSize()][getVerticalSize()];
-//
-//            for (int tempVertical = 0; tempVertical < getHorizontalSize(); tempVertical++) {
-//
-//                for (int tempHorizontal = 0; tempHorizontal < getVerticalSize(); tempHorizontal++) {
-//
-//                    tempMatrix[tempVertical][tempHorizontal] = getElement(getVerticalSize() - tempHorizontal - 1,
-//                            tempVertical);
-//                }
-//            }
-//            array = tempMatrix;
-//        }
     }
 }
