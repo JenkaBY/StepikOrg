@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main1129 {
     /*
@@ -22,15 +20,32 @@ public class Main1129 {
 
     public static void main(String[] args) {
         String[] input = readStdIn(1);
-        final Integer number = numberFromStr(input[0]);
-        final Map<Long, Long> numbers = Stream.of(input[1].split("\\s+"))
-                .mapToLong(Long::valueOf)
-                .boxed()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        long count = numbers.values().stream().filter(num -> num > number / 2).count();
-        print(count > 0 ? 1 : 0);
+        Matrix<Integer> matrix = new Matrix<>();
+        matrix = convertToMatrix(input, (row) -> numberFromStr(row));
+        System.out.println(matrix);
+
     }
 
+    public static <T> Matrix<T> convertToMatrix(String[] input, Function<String, T> function) {
+        Matrix<T> matrix = new Matrix<>();
+        for (int i = 1; i <= input.length; i++) {
+            String[] row = input[i - 1].split(" ");
+
+            for (int j = 1; j <= row.length; j++) {
+                final Cell<T> cell = convertToCell(row[j - 1], i, j, function);
+                matrix.addCell(cell);
+            }
+        }
+        return matrix;
+    }
+
+    public static <T> Cell<T> convertToCell(String row, int rowNumber, int columnNumber, Function<String, T> function) {
+        return new Cell.Builder<T>()
+                .withValue(function.apply(row))
+                .withRowNumber(rowNumber)
+                .withColumnNumber(columnNumber)
+                .getCell();
+    }
     public static void print(Object object) {
         System.out.println(object);
     }
@@ -41,15 +56,24 @@ public class Main1129 {
 
     public static String[] readStdIn(int times) {
         String[] inputs = null;
+        String[] matrixInputs = null;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             inputs = new String[times];
+
             for (int i = 0; i < times; i++) {
                 inputs[i] = br.readLine().trim();
+            }
+//            int column = numberFromStr(inputs[0].split(" ")[0]);
+
+            int row = numberFromStr(inputs[0].split(" ")[1]);
+            matrixInputs = new String[row];
+            for (int i = 0; i < row; i++) {
+                matrixInputs[i] = br.readLine().trim();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return inputs;
+        return matrixInputs;
     }
 
     public static class Matrix<T> {
@@ -79,6 +103,12 @@ public class Main1129 {
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Not found cells by column = " + column + ", row = " + row));
         }
+
+        @Override
+        public String toString() {
+//            TODO create
+            return "Matrix{}";
+        }
     }
 
     public static class CellSort {
@@ -100,12 +130,13 @@ public class Main1129 {
         public Matrix<T> rotate() {
             final Matrix<T> rotatedMatrix = new Matrix<>();
             matrix.getCells().forEach(cell -> {
-                int row = 0;
-                int column = 0;
-                Cell<T> original = matrix.getCellByRowAndColumn(cell.getRowNumber(), cell.getColumnNumber());
-                Cell<T> rot = new Cell.CeilBuilder().withValue(original.getValue())
-//                        .withColumnNumber()
+                Cell<T> original = matrix.getCellByRowAndColumn(cell.getColumnNumber(), cell.getRowNumber());
+                Cell<T> rotated = new Cell.Builder()
+                        .withValue(original.getValue())
+                        .withRowNumber(cell.getColumnNumber())
+                        .withColumnNumber(original.getColumnNumber() - cell.getRowNumber() - 1)
                         .getCell();
+                rotatedMatrix.addCell(rotated);
             });
             return rotatedMatrix;
         }
@@ -126,12 +157,9 @@ public class Main1129 {
 //        }
 
     public static class Cell<T> {
-        T value;
-        int rowNumber;
-        int columnNumber;
-
-        public Cell() {
-        }
+        private T value;
+        private int rowNumber;
+        private int columnNumber;
 
         public T getValue() {
             return value;
@@ -157,37 +185,37 @@ public class Main1129 {
             this.columnNumber = columnNumber;
         }
 
-        public static class CeilBuilder<T> {
+        public static class Builder<T> {
             private Cell<T> cell;
 
-            private void initCeil() {
+            private void initCell() {
                 if (cell == null) {
                     cell = new Cell<>();
                 }
             }
 
-            public CeilBuilder<T> withValue(T value) {
-                initCeil();
+            public Builder<T> withValue(T value) {
+                initCell();
                 cell.value = value;
                 return this;
             }
 
-            public CeilBuilder<T> withRowNumber(int rowNumber) {
-                initCeil();
+            public Builder<T> withRowNumber(int rowNumber) {
+                initCell();
                 checkPositiveNumber(rowNumber);
                 cell.rowNumber = rowNumber;
                 return this;
             }
 
-            public CeilBuilder<T> withColumnNumber(int columnNumber) {
-                initCeil();
+            public Builder<T> withColumnNumber(int columnNumber) {
+                initCell();
                 checkPositiveNumber(columnNumber);
                 cell.columnNumber = columnNumber;
                 return this;
             }
 
             public Cell<T> getCell() {
-                initCeil();
+                initCell();
                 return cell;
             }
 
