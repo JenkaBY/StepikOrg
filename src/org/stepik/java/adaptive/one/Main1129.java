@@ -22,7 +22,7 @@ public class Main1129 {
         String[] input = readStdIn(1);
         Matrix<Integer> matrix = new Matrix<>();
         matrix = convertToMatrix(input, (row) -> numberFromStr(row));
-        System.out.println(matrix);
+        System.out.println(new MatrixRotator<Integer>(matrix).rotate());
 
     }
 
@@ -77,14 +77,12 @@ public class Main1129 {
     }
 
     public static class Matrix<T> {
-        List<Cell<T>> cells;
+        private List<Cell<T>> cells;
+        private int columnSize;
+        private int rowSize;
 
         public Matrix() {
             this.cells = new ArrayList<>();
-        }
-
-        public Matrix(List<Cell<T>> cells) {
-            this.cells = cells;
         }
 
         public void addCell(Cell<T> cell) {
@@ -104,10 +102,40 @@ public class Main1129 {
                     .orElseThrow(() -> new IllegalArgumentException("Not found cells by column = " + column + ", row = " + row));
         }
 
+        public int getColumnSize() {
+            if (columnSize == 0) {
+                final Function<Cell<T>, Integer> getColumnNumber = Cell::getColumnNumber;
+                columnSize = getMaxNumber(getColumnNumber);
+            }
+            return columnSize;
+        }
+
+        public int getRowSize() {
+            if (rowSize == 0) {
+                final Function<Cell<T>, Integer> getRowNumber = Cell::getRowNumber;
+                rowSize = getMaxNumber(getRowNumber);
+            }
+            return rowSize;
+        }
+
+        private int getMaxNumber(Function<Cell<T>, Integer> mapper) {
+            return cells.stream()
+                    .map(mapper)
+                    .mapToInt(Integer::valueOf)
+                    .max()
+                    .orElse(-1);
+        }
         @Override
         public String toString() {
-//            TODO create
-            return "Matrix{}";
+            final List<Cell<T>> sorted = getCells();
+            final StringBuilder sb = new StringBuilder();
+            final String space = " ";
+            sorted.forEach(cell -> {
+                sb.append(cell.getValue());
+                String separator = cell.getColumnNumber() == getColumnSize() ? System.lineSeparator() : space;
+                sb.append(separator);
+            });
+            return sb.toString();
         }
     }
 
@@ -134,7 +162,7 @@ public class Main1129 {
                 Cell<T> rotated = new Cell.Builder()
                         .withValue(original.getValue())
                         .withRowNumber(cell.getColumnNumber())
-                        .withColumnNumber(original.getColumnNumber() - cell.getRowNumber() - 1)
+                        .withColumnNumber(original.getRowNumber() - cell.getColumnNumber() - 1)
                         .getCell();
                 rotatedMatrix.addCell(rotated);
             });
@@ -142,13 +170,11 @@ public class Main1129 {
         }
     }
 
-    //        public void rotateCWto90Degrees() {
+//            public void rotateCWto90Degrees() {
 //            int[][] tempMatrix = new int[getHorizontalSize()][getVerticalSize()];
 //
 //            for (int tempVertical = 0; tempVertical < getHorizontalSize(); tempVertical++) {
-//
 //                for (int tempHorizontal = 0; tempHorizontal < getVerticalSize(); tempHorizontal++) {
-//
 //                    tempMatrix[tempVertical][tempHorizontal] = getElement(getVerticalSize() - tempHorizontal - 1,
 //                            tempVertical);
 //                }
