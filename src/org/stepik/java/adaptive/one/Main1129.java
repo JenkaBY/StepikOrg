@@ -99,7 +99,7 @@ public class Main1129 {
             return cells.stream()
                     .filter(cell -> cell.getColumnNumber() == column && cell.getRowNumber() == row)
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Not found cells by column = " + column + ", row = " + row));
+                    .orElseThrow(() -> new IllegalArgumentException("Not found cell by row = " + row + ", column = " + column));
         }
 
         public int getColumnSize() {
@@ -123,7 +123,7 @@ public class Main1129 {
                     .map(mapper)
                     .mapToInt(Integer::valueOf)
                     .max()
-                    .orElse(-1);
+                    .orElseThrow(() -> new RuntimeException("Max number is not found!"));
         }
         @Override
         public String toString() {
@@ -157,15 +157,32 @@ public class Main1129 {
 
         public Matrix<T> rotate() {
             final Matrix<T> rotatedMatrix = new Matrix<>();
-            matrix.getCells().forEach(cell -> {
-                Cell<T> original = matrix.getCellByRowAndColumn(cell.getColumnNumber(), cell.getRowNumber());
-                Cell<T> rotated = new Cell.Builder()
-                        .withValue(original.getValue())
-                        .withRowNumber(cell.getColumnNumber())
-                        .withColumnNumber(original.getRowNumber() - cell.getColumnNumber() - 1)
-                        .getCell();
-                rotatedMatrix.addCell(rotated);
-            });
+//            matrix.getCells().forEach(cell -> {
+//                Cell<T> original = matrix.getCellByRowAndColumn(cell.getColumnNumber(), cell.getRowNumber());
+//
+//                Cell<T> rotated = new Cell.Builder()
+//                        .withValue(original.getValue())
+//                        .withRowNumber(cell.getColumnNumber())
+//                        .withColumnNumber(original.getRowNumber() - cell.getColumnNumber() - 1)
+//                        .getCell();
+//                rotatedMatrix.addCell(rotated);
+//            });
+
+            for (int tempRowNumber = 1; tempRowNumber <= matrix.getColumnSize(); tempRowNumber++) {
+                for (int tempColumnNumber = 1; tempColumnNumber <= matrix.getRowSize(); tempColumnNumber++) {
+                    Cell<T> original = matrix.getCellByRowAndColumn(tempColumnNumber, tempRowNumber);
+//                    System.out.println(original.toString());
+//                    System.out.println("new cell. column: " + (matrix.getRowSize() - tempColumnNumber + 1)
+//                            + ", row " + tempRowNumber
+//                            + ", value: " + original.getValue());
+                    Cell<T> rotated = new Cell.Builder<T>()
+                            .withColumnNumber(matrix.getRowSize() - tempColumnNumber + 1)
+                            .withRowNumber(tempRowNumber)
+                            .withValue(original.getValue())
+                            .getCell();
+                    rotatedMatrix.addCell(rotated);
+                }
+            }
             return rotatedMatrix;
         }
     }
@@ -211,6 +228,10 @@ public class Main1129 {
             this.columnNumber = columnNumber;
         }
 
+        public String toString() {
+            return "column: " + columnNumber + " row: " + rowNumber + " value: " + value;
+        }
+
         public static class Builder<T> {
             private Cell<T> cell;
 
@@ -247,7 +268,7 @@ public class Main1129 {
 
             private void checkPositiveNumber(int number) {
                 if (number <= 0) {
-                    throw new RuntimeException("Number " + number + " is negative!");
+                    throw new RuntimeException("Number " + number + " is non positive! for cell (" + getCell().toString() + ")");
                 }
             }
         }
